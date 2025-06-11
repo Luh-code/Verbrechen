@@ -1,22 +1,27 @@
 const std = @import("std");
+const c = @import("c_include.zig").c;
 
-const c = @cImport({
-    @cInclude("SDL3/SDL.h");
-});
+const gpu_utils = @import("gpu.zig");
 
 var window: ?*c.SDL_Window = null;
 var renderer: ?*c.SDL_Renderer = null;
 pub fn main() !void {
+    // Set up SDL Window
     std.debug.print("Setting up SDL\n", .{});    
 
     if (!c.SDL_Init(c.SDL_INIT_VIDEO)){
         std.debug.panic("SDL_Init() Error: {s}\n", .{c.SDL_GetError()});
     }
+    defer {
+        std.debug.print("Quitting SDL\n", .{});
+        c.SDL_Quit();
+    }
 
-    window = c.SDL_CreateWindow("Zylo", 1920, 1080, c.SDL_WINDOW_RESIZABLE);
+    window = c.SDL_CreateWindow("Verbrechen", 1920, 1080, c.SDL_WINDOW_RESIZABLE);
     if (window == null) {
         std.debug.panic("SDL_CreateWindow() Error: {s}\n", .{c.SDL_GetError()});
     }
+    defer c.SDL_DestroyWindow(window);
 
     std.debug.print("SDL set up finished\n", .{});
 
@@ -24,7 +29,15 @@ pub fn main() !void {
     if (renderer == null) {
         std.debug.panic("SDL_CreateRenderer() Error: {s}\n", .{c.SDL_GetError()});
     }
+    defer c.SDL_DestroyRenderer(renderer);
 
+    // Set up SDL GPU API
+    var gpu: gpu_utils.GPU = .{
+        .debug = true,
+    };
+    try gpu_utils.setupGPU(&gpu, window.?);
+
+    // Start main loop
     var running = true;
     var event: c.SDL_Event = undefined;
 
@@ -42,9 +55,4 @@ pub fn main() !void {
 
         c.SDL_Delay(16);
     }
-
-    std.debug.print("Quitting SDL\n", .{});
-
-    c.SDL_DestroyWindow(window);
-    c.SDL_Quit();
 }
