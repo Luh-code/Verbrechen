@@ -34,9 +34,16 @@ pub fn main() !void {
     // Set up SDL GPU API
     var gpu: gpu_utils.GPU = .{
         .debug = true,
+        .preferred_driver = "vulkan",
     };
     try gpu_utils.setupGPU(&gpu, window.?);
 
+    const ECS_type = comptime @import("ecs.zig").generateECS(&[_]type {u32});
+    const ecs: ECS_type = .{
+        .component_u32 = std.AutoHashMap(u32, u32).init(std.heap.page_allocator),
+    };
+    _ = ecs;
+    
     // Start main loop
     var running = true;
     var event: c.SDL_Event = undefined;
