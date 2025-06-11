@@ -1,5 +1,5 @@
 {
-  description = "Zylo";
+  description = "Verbrechen engine";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -51,7 +51,7 @@
           inherit buildInputs;
           shellHook = ''
             alias la="eza -lA"
-            echo "Zylo dev shell ready."
+            echo "Verbrechen dev shell ready."
             export LD_LIBRARY_PATH="${pkgs.dbus}/lib:${pkgs.libusb1}/lib:${pkgs.libglvnd}/lib:${pkgs.libdrm}/lib:${pkgs.mesa}/lib:${pkgs.libgbm}/lib:${pkgs.ibus}/lib:${pkgs.libdecor}/lib:${pkgs.libxkbcommon}/lib:${pkgs.wayland-protocols}/lib:${pkgs.egl-wayland}/lib:${pkgs.xdg-desktop-portal-hyprland}/lib:${pkgs.xdg-desktop-portal}/lib:${pkgs.xdg-utils}/lib:${pkgs.wayland}/lib:${pkgs.xorg.libX11}/lib:${pkgs.xorg.libXext}/lib:${pkgs.xorg.libXcursor}/lib:${pkgs.xorg.libXrandr}/lib:${pkgs.xorg.libXi}/lib:${pkgs.udev}/lib:$LD_LIBRARY_PATH"
           '';
         };

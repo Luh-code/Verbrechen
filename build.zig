@@ -88,7 +88,7 @@ pub fn build(b: *std.Build) !void {
     
     // Add executable
     const exe = b.addExecutable(.{
-        .name = "zylo",
+        .name = "Verbrechen",
         .root_module = exe_mod,
     });
     exe.linkLibC();
