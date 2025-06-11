@@ -1,0 +1,6 @@
+[submodule "deps/cimgui"]
+	path = deps/cimgui
+	url = git@github.com:cimgui/cimgui.git
+[submodule "deps/sdl"]
+	path = deps/sdl
+	url = git@github.com:libsdl-org/SDL.git
