@@ -40,12 +40,25 @@ pub fn main() !void {
 
     // Set up ECS
     const ECS_Component_Types = [_]type {u32};
+    
+    const Entity_Type = comptime @import("ecs.zig").generateEntityType(ECS_Component_Types.len);
+    var t_entity: Entity_Type = .{};
+    t_entity.components_set.set(0);
 
-    const ECS_type = comptime @import("ecs.zig").generateECS(&ECS_Component_Types);
+
+    const ECS_Component_Struct_Type = comptime @import("ecs.zig").GenerateComponentStructType(&ECS_Component_Types);
+    const ECS_Type = comptime @import("ecs.zig").GenerateECSType(Entity_Type, ECS_Component_Struct_Type);
+
+    var ecs: ECS_Type = @import("ecs.zig").initECS(ECS_Type, Entity_Type, &ECS_Component_Types, std.heap.page_allocator);
+    var t_u32_component: u32 = 3;
+    try ecs.components.component_u32.put(0, &t_u32_component);
     
-    var ecs: ECS_type = @import("ecs.zig").initECS(ECS_type, &ECS_Component_Types, std.heap.page_allocator);
-    try ecs.component_u32.put(0, 3);
-    
+    const e0 = try ecs.addEntity();
+    std.debug.print("Created new Entity with ID {d}\n", .{e0});
+
+    const e1 = try ecs.addEntity();
+    std.debug.print("Created new Entity with ID {d}\n", .{e1});
+
     // Start main loop
     var running = true;
     var event: c.SDL_Event = undefined;
