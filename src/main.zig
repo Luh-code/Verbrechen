@@ -38,11 +38,13 @@ pub fn main() !void {
     };
     try gpu_utils.setupGPU(&gpu, window.?);
 
-    const ECS_type = comptime @import("ecs.zig").generateECS(&[_]type {u32});
-    const ecs: ECS_type = .{
-        .component_u32 = std.AutoHashMap(u32, u32).init(std.heap.page_allocator),
-    };
-    _ = ecs;
+    // Set up ECS
+    const ECS_Component_Types = [_]type {u32};
+
+    const ECS_type = comptime @import("ecs.zig").generateECS(&ECS_Component_Types);
+    
+    var ecs: ECS_type = @import("ecs.zig").initECS(ECS_type, &ECS_Component_Types, std.heap.page_allocator);
+    try ecs.component_u32.put(0, 3);
     
     // Start main loop
     var running = true;
