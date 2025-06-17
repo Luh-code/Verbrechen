@@ -12,12 +12,13 @@ pub const CustomComponent = struct {
 // Generates an entity type needed for GenerateECSType
 pub fn generateEntityType(comptime count: usize) type {
     return struct {
-        components_set: std.bit_set.StaticBitSet(count) = std.bit_set.StaticBitSet(count).initEmpty(),
+        // count+1 to account for custom_component
+        components_set: std.bit_set.StaticBitSet(count+1) = std.bit_set.StaticBitSet(count+1).initEmpty(),
    
         const Self = @This();
 
-        pub fn addComponent(self: *Self) void {
-            _ = self;
+        pub fn addComponent(self: *Self, index: u32) void {
+            self.components_set.set(index);
         }
     };
 }
@@ -35,7 +36,7 @@ pub fn GenerateComponentStructType(comptime Components: []const type) type {
     for (struct_fields[fixed_fields.len..], Components) |*struct_field, t| {
         struct_field.* = .{
             .name = "component_"++@typeName(t),
-            .type = std.AutoHashMap(u32, *t),
+            .type = std.AutoHashMap(u32, *const t),
             .default_value_ptr = null,
             .is_comptime = false,
             .alignment = @alignOf(std.AutoHashMap(u32, *t)),
@@ -132,15 +133,26 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
         }
 
         // Adds a component to a specified entity
-        pub fn addComponent(self: *Self, entity: Entity_Type, component: anytype) void {
-            const comp_name = "component_" ++ @typeName(component);
+        pub fn addComponent(self: *Self, entity: u32, component: anytype) void {
+            // Register new component
+            if (@typeInfo(@TypeOf(component)) != .pointer) {
+                @compileError("Expected a pointer type");
+            }
+            const pointee_type = @typeInfo(@TypeOf(component)).pointer.child;
+
+            const comp_name = "component_" ++ @typeName(pointee_type);
             const id = self.component_id_manager.getNext();
             @field(self.components, comp_name).put(id, component) catch |err| {
                 std.debug.panic("{}\n", .{err});
             };
-            _ = entity;
-            //entity.
+            
+            // Register component in entity
+            const index = self.component_map.get("component_" ++ @typeName(pointee_type)) orelse std.debug.panic("No entry in component_map for {s}\n", .{@typeName(pointee_type)});
+            const e = self.entities.get(entity) orelse std.debug.panic("No entity with ID {d} exists\n", .{entity});
+            e.addComponent(index);
         }
+
+        // Removes a component from a specified entitiy
     };
 }
 
@@ -148,7 +160,7 @@ pub fn initComponentStruct(comptime ECS_Component_Struct_Type: type, comptime Co
     var comp_struct: ECS_Component_Struct_Type = undefined;
     @field(comp_struct, "custom_component") = std.AutoHashMap(u32, *CustomComponent).init(allocator);
     inline for (Components) |comp| {
-        @field(comp_struct, "component_"++@typeName(comp)) = std.AutoHashMap(u32, *comp).init(allocator);
+        @field(comp_struct, "component_"++@typeName(comp)) = std.AutoHashMap(u32, *const comp).init(allocator);
     }
 
     return comp_struct;

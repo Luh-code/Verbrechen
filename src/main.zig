@@ -66,6 +66,9 @@ pub fn main() !void {
     const e3 = ecs.addEntity();
     std.debug.print("Created new Entity with ID {d}\n", .{e3});
 
+    const c0: u32 = 32;
+    ecs.addComponent(e3, &c0);
+
     // Start main loop
     var running = true;
     var event: c.SDL_Event = undefined;
