@@ -20,6 +20,10 @@ pub fn generateEntityType(comptime count: usize) type {
         pub fn addComponent(self: *Self, index: u32) void {
             self.components_set.set(index);
         }
+
+        pub fn removeComponent(self: *Self, index: u32) void {
+            self.components_set.unset(index);
+        }
     };
 }
 
@@ -178,31 +182,40 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
             rev_component_map.put(component, id) catch |err| {
                 std.debug.panic("{}\n", .{err});
             };
-            std.debug.print("{p}\n", .{component});
             
             // Register component in entity
-            const index = self.component_index_map.get("component_" ++ @typeName(pointee_type)) orelse std.debug.panic("No entry in component_map for {s}\n", .{@typeName(pointee_type)});
+            const index = self.component_index_map.get("component_" ++ @typeName(pointee_type)) orelse std.debug.panic("No entry in component_index_map for {s}\n", .{@typeName(pointee_type)});
             const e = self.entities.get(entity) orelse std.debug.panic("No entity with ID {d} exists\n", .{entity});
             e.addComponent(index);
+
+            std.debug.print("Added component {p} to Entitiy {d}\n", .{component, entity});
         }
 
         // Removes a component from a specified entitiy
-        pub fn removeComponent(self: *Self, entity: u32, comptime component: anytype) void {
-            _ = entity;
-
+        pub fn removeComponent(self: *Self, comptime component: anytype) void {
+            
+            // Remove component from reverse map
             const pointee_type = getComponentTypeFromComponent(component);
             var rev_component_map = self.getComponentMapPointerFromName("rev_"++getComponentMapNameFromType(pointee_type));
-            
+
             //printHashMap(*const pointee_type, u32, component_map);
-            const id = rev_component_map.get(component) orelse std.debug.panic("The component {p} is not registered\n", .{component});
+            const entity = rev_component_map.get(component) orelse std.debug.panic("The component {p} is not registered\n", .{component}); 
             if (!rev_component_map.remove(component)) {
-                std.debug.panic("Entitiy {d} not assicated with component {p} in backwards map\n", .{id, component});
+                std.debug.panic("Entitiy {d} not associated with component {p} in reverse map\n", .{entity, component});
             }
-            
+
+            // Remove component from forwards map            
             var component_map = self.getComponentMapPointerFromName(getComponentMapNameFromType(pointee_type));
-            if (!component_map.remove(id)) {
-                std.debug.panic("Entitiy {d} not assicated with component {p} in forwards map\n", .{id, component});
+            if (!component_map.remove(entity)) {
+                std.debug.panic("Entitiy {d} not associated with component {p} in forwards map\n", .{entity, component});
             }
+
+            // Remove component flag from entity
+            const index = self.component_index_map.get(getComponentMapNameFromType(pointee_type)) orelse std.debug.panic("No entry in component_index_map for {s}\n", .{@typeName(pointee_type)});
+            const e = self.entities.get(entity) orelse std.debug.panic("No entity with ID {d} exists\n", .{entity});
+            e.removeComponent(index);
+            
+            std.debug.print("Removed component {p} from Entity {d}\n", .{component, entity});
         }
     };
 }

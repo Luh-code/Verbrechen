@@ -70,7 +70,7 @@ pub fn main() !void {
     const c1: u32 = 33;
     ecs.addComponent(e3, &c0);
     ecs.addComponent(e3, &c1);
-    ecs.removeComponent(e3, &c0);
+    ecs.removeComponent(&c0);
 
     // Start main loop
     var running = true;
