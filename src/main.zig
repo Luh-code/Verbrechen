@@ -42,8 +42,8 @@ pub fn main() !void {
     const ECS_Component_Types = [_]type {u32};
     
     const Entity_Type = comptime @import("ecs.zig").generateEntityType(ECS_Component_Types.len);
-    var t_entity: Entity_Type = .{};
-    t_entity.components_set.set(0);
+    //var t_entity: Entity_Type = .{};
+    //t_entity.components_set.set(0);
 
 
     const ECS_Component_Struct_Type = comptime @import("ecs.zig").GenerateComponentStructType(&ECS_Component_Types);
@@ -68,8 +68,9 @@ pub fn main() !void {
 
     const c0: u32 = 32;
     const c1: u32 = 33;
+    ecs.addComponent(e2, &c1);
     ecs.addComponent(e3, &c0);
-    ecs.addComponent(e3, &c1);
+    //ecs.addComponent(e3, &c0);
     ecs.removeComponent(&c0);
 
     // Start main loop

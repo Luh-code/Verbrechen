@@ -13,9 +13,15 @@ pub const CustomComponent = struct {
 pub fn generateEntityType(comptime count: usize) type {
     return struct {
         // count+1 to account for custom_component
-        components_set: std.bit_set.StaticBitSet(count+1) = std.bit_set.StaticBitSet(count+1).initEmpty(),
+        components_set: std.bit_set.StaticBitSet(count+1),
    
         const Self = @This();
+
+        pub fn init() generateEntityType(count) {
+            return .{
+                .components_set = std.bit_set.StaticBitSet(count+1).initEmpty()
+            };
+        } 
 
         pub fn addComponent(self: *Self, index: u32) void {
             self.components_set.set(index);
@@ -24,13 +30,17 @@ pub fn generateEntityType(comptime count: usize) type {
         pub fn removeComponent(self: *Self, index: u32) void {
             self.components_set.unset(index);
         }
+
+        pub fn checkSet(self: *Self, index: u32) bool {
+            return self.components_set.isSet(index);
+        }
     };
 }
 
 pub fn printHashMap(comptime K: type, comptime V: type, map: *std.AutoHashMap(K, V)) void {
     var it = map.iterator();
     while (it.next()) |entry| {
-        std.debug.print("Key: {any}, Value: {any}\n", .{ entry.key_ptr.*, entry.value_ptr.* });
+        std.debug.print("Key: {any}, Value: {any}({p})\n", .{ entry.key_ptr.*, entry.value_ptr.*, entry.value_ptr });
     }
 }
 
@@ -109,6 +119,8 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
     };
 
     return struct {
+        allocator: std.mem.Allocator,
+
         entity_id_manager: ID_Manager,
         component_id_manager: ID_Manager,
         entities: std.AutoHashMap(u32, *Entity_Type),
@@ -124,6 +136,7 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
             }
 
             return .{
+                .allocator = allocator,
                 .entity_id_manager = .{
                     .next = 0,
                     .free = std.ArrayList(u32).init(allocator),
@@ -142,11 +155,15 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
 
         // Adds an entity, returns the id
         pub fn addEntity(self: *Self) u32 {
-            var entity: Entity_Type = .{};
+            const entity: *Entity_Type = self.allocator.create(Entity_Type) catch |err| {
+                std.debug.panic("Could not allocate memory for entity: {}\n", .{err});
+            };
+            entity.* = Entity_Type.init();
             const id = self.entity_id_manager.getNext(); 
-            self.entities.put(id, &entity) catch |err| {
+            self.entities.put(id, entity) catch |err| {
                 std.debug.panic("{}\n", .{err});
             };
+            printHashMap(u32, *Entity_Type, &self.entities);
             return id;
         }
 
@@ -173,7 +190,18 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
             const pointee_type = getComponentTypeFromComponent(component);
             var component_map = self.getComponentMapPointerFromName(getComponentMapNameFromType(pointee_type));
             var rev_component_map = self.getComponentMapPointerFromName("rev_"++getComponentMapNameFromType(pointee_type));
-            
+           
+            // Check if entity is already registered
+            const t = rev_component_map.get(component);
+            if (t != null) {
+                std.debug.panic("Component {p} is already added\n", .{component});
+            }
+            const index = self.component_index_map.get("component_" ++ @typeName(pointee_type)) orelse std.debug.panic("No entry in component_index_map for {s}\n", .{@typeName(pointee_type)});
+            var e = self.entities.get(entity) orelse std.debug.panic("No entity with ID {d} exists\n", .{entity});
+            if (e.checkSet(index)) {
+                std.debug.panic("Entity {d} already has a component of type {s} attached\n", .{entity, @typeName(pointee_type)});
+            }
+
             // Register new component
             const id = self.component_id_manager.getNext();
             component_map.put(id, component) catch |err| {
@@ -184,9 +212,8 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
             };
             
             // Register component in entity
-            const index = self.component_index_map.get("component_" ++ @typeName(pointee_type)) orelse std.debug.panic("No entry in component_index_map for {s}\n", .{@typeName(pointee_type)});
-            const e = self.entities.get(entity) orelse std.debug.panic("No entity with ID {d} exists\n", .{entity});
             e.addComponent(index);
+            printHashMap(u32, *Entity_Type, &self.entities);
 
             std.debug.print("Added component {p} to Entitiy {d}\n", .{component, entity});
         }
@@ -212,7 +239,7 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
 
             // Remove component flag from entity
             const index = self.component_index_map.get(getComponentMapNameFromType(pointee_type)) orelse std.debug.panic("No entry in component_index_map for {s}\n", .{@typeName(pointee_type)});
-            const e = self.entities.get(entity) orelse std.debug.panic("No entity with ID {d} exists\n", .{entity});
+            var e = self.entities.get(entity) orelse std.debug.panic("No entity with ID {d} exists\n", .{entity});
             e.removeComponent(index);
             
             std.debug.print("Removed component {p} from Entity {d}\n", .{component, entity});
