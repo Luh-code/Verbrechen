@@ -67,7 +67,10 @@ pub fn main() !void {
     std.debug.print("Created new Entity with ID {d}\n", .{e3});
 
     const c0: u32 = 32;
+    const c1: u32 = 33;
     ecs.addComponent(e3, &c0);
+    ecs.addComponent(e3, &c1);
+    ecs.removeComponent(e3, &c0);
 
     // Start main loop
     var running = true;
