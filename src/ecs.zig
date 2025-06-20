@@ -44,7 +44,7 @@ pub fn printHashMap(comptime K: type, comptime V: type, map: *std.AutoHashMap(K,
     }
 }
 
-const Callback = *fn(dt: f32, entitites: std.ArrayList(u32)) void;
+const Callback = *const fn(dt: f32, entitites: *std.ArrayList(u32)) void;
 
 pub fn GenerateSystem(comptime Components: []const type) type {
     return struct {
@@ -142,11 +142,11 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
         
         component_index_map: std.StringHashMap(u32),
 
-        systems_pre: [] *System,
-        systems: [] *System,
-        systems_post: [] *System,
+        systems_pre: []const *System,
+        systems: []const *System,
+        systems_post: []const *System,
         
-        pub fn init(allocator: std.mem.Allocator, systems_configs: struct {pre: [] *System = &[_]*System{}, on: [] *System = &[_]*System{}, post: [] *System = &[_]*System{}}) !Self {
+        pub fn init(allocator: std.mem.Allocator, systems_configs: struct {pre: []const *System = &[_]*System{}, on: []const *System = &[_]*System{}, post: []const *System = &[_]*System{}}) !Self {
             var temp = std.StringHashMap(u32).init(allocator);
             const component_types = @typeInfo(Component_Struct_Type).@"struct".fields;
             inline for (component_types) |t| {
@@ -199,6 +199,7 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
                             system.linked_entities.append(en) catch |err| {
                                 std.debug.panic("Failed to add entity to system: {}\n", .{err});
                             };
+                            std.debug.print("Added entity {d} to system {p}\n", .{en, &system});
                         }
                     }}.runner, entity); 
                 }, 
@@ -321,6 +322,13 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
            
             self.entityUpdate(entity, EntityUpdateType.COMP_REMOVED);
             std.debug.print("Removed component {p} from Entity {d}\n", .{component, entity});
+        }
+
+        // Trigger update systems
+        pub fn update(self: *Self) void {
+            for (self.systems) |sys| {
+                sys.callback(0.0, &sys.linked_entities);
+            }
         }
     };
 }

@@ -49,7 +49,22 @@ pub fn main() !void {
     const ECS_Component_Struct_Type = comptime @import("ecs.zig").GenerateComponentStructType(&ECS_Component_Types);
     const ECS_Type = comptime @import("ecs.zig").GenerateECSType(Entity_Type, ECS_Component_Struct_Type, &ECS_Component_Types);
 
-    var ecs: ECS_Type = try ECS_Type.init(std.heap.page_allocator, .{});
+    const SystemType = comptime @import("ecs.zig").GenerateSystem(&ECS_Component_Types);
+    var test_system: SystemType = .{
+        .callback = struct {
+            pub fn f(dt: f32, linked_entities: *std.ArrayList(u32)) void {
+                _ = dt;
+                std.debug.print("Linked entities: {any}\n", .{linked_entities.items});
+            }
+        }.f,
+        .signature = std.bit_set.StaticBitSet(ECS_Component_Types.len+1).initEmpty(),
+        .linked_entities = std.ArrayList(u32).init(std.heap.page_allocator),
+    };
+    test_system.signature.set(1);
+
+    var ecs: ECS_Type = try ECS_Type.init(std.heap.page_allocator, .{
+        .on = &[_]*SystemType {&test_system},
+    });
     var t_u32_component: u32 = 3;
     try ecs.components.component_u32.put(0, &t_u32_component);
     
@@ -84,6 +99,8 @@ pub fn main() !void {
                 running = false;
             }
         }
+
+        ecs.update();
 
         _ = c.SDL_SetRenderDrawColor(renderer, 30, 30, 60, 255);
         _ = c.SDL_RenderClear(renderer);
