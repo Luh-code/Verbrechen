@@ -326,8 +326,18 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
         }
 
         // Trigger update systems
+        pub fn preUpdate(self: *Self) void {
+            for (self.systems_pre) |sys| {
+                sys.callback(0.0, &sys.linked_entities);
+            }
+        }
         pub fn update(self: *Self) void {
             for (self.systems) |sys| {
+                sys.callback(0.0, &sys.linked_entities);
+            }
+        }
+        pub fn postUpdate(self: *Self) void {
+            for (self.systems_post) |sys| {
                 sys.callback(0.0, &sys.linked_entities);
             }
         }
@@ -347,17 +357,3 @@ pub fn initComponentStruct(comptime ECS_Component_Struct_Type: type, comptime Co
     return comp_struct;
 }
 
-//pub fn initECS(comptime ECS_Type: type, comptime Entitiy_Type: type, comptime Components: []const type, allocator: std.mem.Allocator) ECS_Type {
-//    const temp: ECS_Type = undefined;
-//    return .{
-//        .entity_id_manager = .{
-//            .free = std.ArrayList(u32).init(allocator),
-//        },
-//        .component_id_manager = .{
-//            .free = std.ArrayList(u32).init(allocator),
-//        },
-//        .entities = std.AutoHashMap(u32, *Entitiy_Type).init(allocator),
-//        .components = initComponentStruct(@TypeOf(temp.components), Components, allocator),
-//    };
-//
-//}
