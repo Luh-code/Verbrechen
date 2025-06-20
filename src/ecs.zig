@@ -136,7 +136,7 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
         allocator: std.mem.Allocator,
 
         entity_id_manager: ID_Manager,
-        component_id_manager: ID_Manager,
+        //component_id_manager: ID_Manager,
         entities: std.AutoHashMap(u32, *Entity_Type),
         components: Component_Struct_Type,
         
@@ -159,10 +159,10 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
                     .next = 0,
                     .free = std.ArrayList(u32).init(allocator),
                 },
-                .component_id_manager = .{
-                    .next = 0,
-                    .free = std.ArrayList(u32).init(allocator),
-                },
+                //.component_id_manager = .{
+                //    .next = 0,
+                //    .free = std.ArrayList(u32).init(allocator),
+                //},
                 .entities = std.AutoHashMap(u32, *Entity_Type).init(allocator),
                 .components = initComponentStruct(Component_Struct_Type, Components, allocator),
                 
@@ -220,6 +220,7 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
                             if (v == en) {
                                 if (!system.signature.subsetOf(e.components_set)) {
                                     _ = system.linked_entities.orderedRemove(i);
+                                    std.debug.print("Removed entity {d} from system {p}\n", .{en, &system});
                                 }
                             }
                         }
@@ -280,17 +281,17 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
             }
 
             // Register new component
-            const id = self.component_id_manager.getNext();
-            component_map.put(id, component) catch |err| {
+            //const id = self.component_id_manager.getNext();
+            component_map.put(entity, component) catch |err| {
                 std.debug.panic("{}\n", .{err});
             };
-            rev_component_map.put(component, id) catch |err| {
+            rev_component_map.put(component, entity) catch |err| {
                 std.debug.panic("{}\n", .{err});
             };
             
             // Register component in entity
             e.addComponent(index);
-            printHashMap(u32, *Entity_Type, &self.entities);
+            //printHashMap(u32, *Entity_Type, &self.entities);
 
             self.entityUpdate(entity, EntityUpdateType.ADDED);
             std.debug.print("Added component {p} to Entitiy {d}\n", .{component, entity});
