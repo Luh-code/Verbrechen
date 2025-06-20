@@ -47,9 +47,9 @@ pub fn main() !void {
 
 
     const ECS_Component_Struct_Type = comptime @import("ecs.zig").GenerateComponentStructType(&ECS_Component_Types);
-    const ECS_Type = comptime @import("ecs.zig").GenerateECSType(Entity_Type, ECS_Component_Struct_Type);
+    const ECS_Type = comptime @import("ecs.zig").GenerateECSType(Entity_Type, ECS_Component_Struct_Type, &ECS_Component_Types);
 
-    var ecs: ECS_Type = try ECS_Type.init(&ECS_Component_Types, std.heap.page_allocator);
+    var ecs: ECS_Type = try ECS_Type.init(std.heap.page_allocator, .{});
     var t_u32_component: u32 = 3;
     try ecs.components.component_u32.put(0, &t_u32_component);
     
