@@ -3,23 +3,16 @@ const c = @import("c_include.zig").c;
 
 const ArrayList = std.ArrayList;
 
-// The type for custom components. Use is not recommended if not nessecary, unsafe and unmanaged
-pub const CustomComponent = struct {
-    custom_type: type,
-    custom: *anyopaque,
-};
-
 // Generates an entity type needed for GenerateECSType
 pub fn generateEntityType(comptime count: usize) type {
     return struct {
-        // count+1 to account for custom_component
-        components_set: std.bit_set.StaticBitSet(count+1),
+        components_set: std.bit_set.StaticBitSet(count),
    
         const Self = @This();
 
         pub fn init() generateEntityType(count) {
             return .{
-                .components_set = std.bit_set.StaticBitSet(count+1).initEmpty()
+                .components_set = std.bit_set.StaticBitSet(count).initEmpty()
             };
         } 
 
@@ -48,7 +41,7 @@ const Callback = *const fn(dt: f32, entitites: *std.ArrayList(u32)) void;
 
 pub fn GenerateSystem(comptime Components: []const type) type {
     return struct {
-        signature: std.bit_set.StaticBitSet(Components.len+1),
+        signature: std.bit_set.StaticBitSet(Components.len),
         callback: Callback,
 
         linked_entities: std.ArrayList(u32),
@@ -58,7 +51,7 @@ pub fn GenerateSystem(comptime Components: []const type) type {
 // Generates a Component_Struct type for an ECS - used for GenerateECSType
 pub fn GenerateComponentStructType(comptime Components: []const type) type {
     const Base_Struct = struct {
-        custom_component: std.AutoHashMap(u32, *CustomComponent),
+        //custom_component: std.AutoHashMap(u32, *CustomComponent),
     };
     const fixed_fields: []const std.builtin.Type.StructField = @typeInfo(Base_Struct).@"struct".fields;
 
@@ -245,12 +238,31 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
         }
 
         // Removes an entity, returns true if removal was successful
+        // Does NOT .deinit entites! Call getLinkedEntities before to deinit manually
         pub fn removeEntity(self: *Self, entity: u32) bool {
+            //var e = self.entities.get(entity) orelse std.debug.panic("Failed to find entity with ID {d}\n", .{entity});
+            //var index_it = self.component_index_map.iterator();
+            
+            inline for (0..1) |v| {
+                _ = v;
+                //const s = e.checkSet(p.value_ptr.*);
+                //if (s) {
+                //    var comp_map = @field(self.components, self.component_index_map.get(p.key_ptr));
+                //    const comp = comp_map.get(entity) catch |err| {
+                //        std.debug.panic("Failed to find component in \"{s}\" for entity {d}: {}\n", .{p.key_ptr, entity, err});
+                //    };
+                //    comp_map.remove(entity);
+                //    var rev_comp_map = @field(self.components, "rev_"++p.key_ptr);
+                //    rev_comp_map.remove(comp);
+                //}
+            }
+            
             self.entityUpdate(entity, EntityUpdateType.REMOVED);
             const rem = self.entities.remove(entity);
             if (rem) {
                 self.entity_id_manager.remove(entity);
             }
+
             return rem;
         }
 
@@ -346,7 +358,6 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
 
 pub fn initComponentStruct(comptime ECS_Component_Struct_Type: type, comptime Components: []const type, allocator: std.mem.Allocator) ECS_Component_Struct_Type {
     var comp_struct: ECS_Component_Struct_Type = undefined;
-    @field(comp_struct, "custom_component") = std.AutoHashMap(u32, *CustomComponent).init(allocator);
     inline for (Components) |comp| {
         @field(comp_struct, "component_"++@typeName(comp)) = std.AutoHashMap(u32, *const comp).init(allocator);
     }

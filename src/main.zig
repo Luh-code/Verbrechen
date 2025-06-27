@@ -57,7 +57,7 @@ pub fn main() !void {
                 std.debug.print("Linked entities: {any}\n", .{linked_entities.items});
             }
         }.f,
-        .signature = std.bit_set.StaticBitSet(ECS_Component_Types.len+1).initEmpty(),
+        .signature = std.bit_set.StaticBitSet(ECS_Component_Types.len).initEmpty(),
         .linked_entities = std.ArrayList(u32).init(std.heap.page_allocator),
     };
     test_system.signature.set(1);
