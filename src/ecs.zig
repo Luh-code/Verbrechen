@@ -7,6 +7,7 @@ const ArrayList = std.ArrayList;
 pub fn generateEntityType(comptime count: usize) type {
     return struct {
         components_set: std.bit_set.StaticBitSet(count),
+        //linked_components: std.AutoHashMap(u32, )
    
         const Self = @This();
 
@@ -51,7 +52,6 @@ pub fn GenerateSystem(comptime Components: []const type) type {
 // Generates a Component_Struct type for an ECS - used for GenerateECSType
 pub fn GenerateComponentStructType(comptime Components: []const type) type {
     const Base_Struct = struct {
-        //custom_component: std.AutoHashMap(u32, *CustomComponent),
     };
     const fixed_fields: []const std.builtin.Type.StructField = @typeInfo(Base_Struct).@"struct".fields;
 
