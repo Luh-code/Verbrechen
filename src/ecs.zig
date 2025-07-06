@@ -3,30 +3,70 @@ const c = @import("c_include.zig").c;
 
 const ArrayList = std.ArrayList;
 
+fn generateEntityComponentHolder(comptime Components: []const type) type {
+    //const Base_Struct = struct {};
+    //var  = []const std.builtin.Type.StructField = @typeInfo(Base_Struct).@"struct".fields;
+    var struct_fields: [Components.len]std.builtin.Type.StructField = undefined;
+    
+    for (struct_fields[0..struct_fields.len], Components) |*struct_field, t| {
+        struct_field.* = .{
+            .name = @typeName(t),
+            .type = ?*const t,
+            .default_value_ptr = null,
+            .is_comptime = false,
+            .alignment = @alignOf(?*const t),
+        };
+    }
+
+    return @Type(.{ .@"struct" = .{
+        .layout = .auto,
+        .fields = &struct_fields,
+        .decls = &.{},
+        .is_tuple = false,
+    }});
+}
+
+fn initEntityComponentHolder(comptime Components: []const type) generateEntityComponentHolder(Components) {
+    var ech: generateEntityComponentHolder(Components) = undefined;
+    inline for (Components) |t| {
+        @field(ech, @typeName(t)) = null;
+    }
+    return ech;
+}
+
 // Generates an entity type needed for GenerateECSType
-pub fn generateEntityType(comptime count: usize) type {
+pub fn generateEntityType(comptime count: usize, comptime Components: []const type) type {
+    const ComponentHolder: type = generateEntityComponentHolder(Components);
+
     return struct {
         components_set: std.bit_set.StaticBitSet(count),
-        //linked_components: std.AutoHashMap(u32, )
+        linked_components: ComponentHolder,
    
         const Self = @This();
 
-        pub fn init() generateEntityType(count) {
+        pub fn init() generateEntityType(count, Components) {
             return .{
-                .components_set = std.bit_set.StaticBitSet(count).initEmpty()
+                .components_set = std.bit_set.StaticBitSet(count).initEmpty(),
+                .linked_components = initEntityComponentHolder(Components),
             };
         } 
 
-        pub fn addComponent(self: *Self, index: u32) void {
+        pub fn addComponent(self: *Self, index: u32, component: anytype) void {
             self.components_set.set(index);
+            @field(self.linked_components, @typeName(@TypeOf(component.*))) = component;
         }
 
-        pub fn removeComponent(self: *Self, index: u32) void {
+        pub fn removeComponent(self: *Self, index: u32, component: anytype) void {
             self.components_set.unset(index);
+            @field(self.linked_components, @typeName(@TypeOf(component.*))) = null;
         }
 
         pub fn checkSet(self: *Self, index: u32) bool {
             return self.components_set.isSet(index);
+        }
+
+        pub fn removeLinkedComponent(self: *Self, component: anytype) void {
+            @field(self.linked_components, @typeName(component)) = null;
         }
     };
 }
@@ -240,12 +280,17 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
         // Removes an entity, returns true if removal was successful
         // Does NOT .deinit entites! Call getLinkedEntities before to deinit manually
         pub fn removeEntity(self: *Self, entity: u32) bool {
-            //var e = self.entities.get(entity) orelse std.debug.panic("Failed to find entity with ID {d}\n", .{entity});
+            var e = self.entities.get(entity) orelse std.debug.panic("Failed to find entity with ID {d}\n", .{entity});
             //var index_it = self.component_index_map.iterator();
             
-            inline for (0..1) |v| {
-                _ = v;
-                //const s = e.checkSet(p.value_ptr.*);
+            inline for (0..Components.len, Components) |i, T| {
+                const s = e.checkSet(i);
+                if (s) {
+                    //const component = @field(e.getLinkedComponents(), @typeName(T));
+                    //self.removeComponent(component);
+                    e.removeLinkedComponent(T);
+                }
+
                 //if (s) {
                 //    var comp_map = @field(self.components, self.component_index_map.get(p.key_ptr));
                 //    const comp = comp_map.get(entity) catch |err| {
@@ -302,7 +347,8 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
             };
             
             // Register component in entity
-            e.addComponent(index);
+            e.addComponent(index, component);
+            
             //printHashMap(u32, *Entity_Type, &self.entities);
 
             self.entityUpdate(entity, EntityUpdateType.ADDED);
@@ -331,7 +377,7 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
             // Remove component flag from entity
             const index = self.component_index_map.get(getComponentMapNameFromType(pointee_type)) orelse std.debug.panic("No entry in component_index_map for {s}\n", .{@typeName(pointee_type)});
             var e = self.entities.get(entity) orelse std.debug.panic("No entity with ID {d} exists\n", .{entity});
-            e.removeComponent(index);
+            e.removeComponent(index, component);
            
             self.entityUpdate(entity, EntityUpdateType.COMP_REMOVED);
             std.debug.print("Removed component {p} from Entity {d}\n", .{component, entity});

@@ -41,7 +41,7 @@ pub fn main() !void {
     // Set up ECS
     const ECS_Component_Types = [_]type {u32};
     
-    const Entity_Type = comptime @import("ecs.zig").generateEntityType(ECS_Component_Types.len);
+    const Entity_Type = comptime @import("ecs.zig").generateEntityType(ECS_Component_Types.len, &ECS_Component_Types);
     //var t_entity: Entity_Type = .{};
     //t_entity.components_set.set(0);
 
@@ -60,7 +60,7 @@ pub fn main() !void {
         .signature = std.bit_set.StaticBitSet(ECS_Component_Types.len).initEmpty(),
         .linked_entities = std.ArrayList(u32).init(std.heap.page_allocator),
     };
-    test_system.signature.set(1);
+    test_system.signature.set(0);
 
     var ecs: ECS_Type = try ECS_Type.init(std.heap.page_allocator, .{
         .on = &[_]*SystemType {&test_system},
@@ -68,16 +68,16 @@ pub fn main() !void {
     var t_u32_component: u32 = 3;
     try ecs.components.component_u32.put(0, &t_u32_component);
     
-    const e0 = ecs.addEntity();
-    std.debug.print("Created new Entity with ID {d}\n", .{e0});
-    const e1 = ecs.addEntity();
-    std.debug.print("Created new Entity with ID {d}\n", .{e1});
+    //const e0 = ecs.addEntity();
+    //std.debug.print("Created new Entity with ID {d}\n", .{e0});
+    //const e1 = ecs.addEntity();
+    //std.debug.print("Created new Entity with ID {d}\n", .{e1});
 
-    _ = ecs.removeEntity(e0);
-    std.debug.print("Removed Entity with ID {d}\n", .{e0});
+    //_ = ecs.removeEntity(e0);
+    //std.debug.print("Removed Entity with ID {d}\n", .{e0});
 
     const e2 = ecs.addEntity();
-    std.debug.print("Created new Entity with ID {d}\n", .{e2});
+    //std.debug.print("Created new Entity with ID {d}\n", .{e2});
     const e3 = ecs.addEntity();
     std.debug.print("Created new Entity with ID {d}\n", .{e3});
 
@@ -85,8 +85,9 @@ pub fn main() !void {
     const c1: u32 = 33;
     ecs.addComponent(e2, &c1);
     ecs.addComponent(e3, &c0);
-    //ecs.addComponent(e3, &c0);
-    ecs.removeComponent(&c0);
+    //ecs.addComponent(e3, &c1);
+    //ecs.removeComponent(&c0);
+    _ = ecs.removeEntity(e2);
 
     // Start main loop
     var running = true;
