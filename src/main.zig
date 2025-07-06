@@ -1,5 +1,6 @@
 const std = @import("std");
-const c = @import("c_include.zig").c;
+pub const c = @import("c_include.zig").c;
+pub const ecs = @import("ecs.zig");
 
 const gpu_utils = @import("gpu.zig");
 
@@ -41,7 +42,7 @@ pub fn main() !void {
     // Set up ECS
     const ECS_Component_Types = [_]type {u32};
     
-    const Entity_Type = comptime @import("ecs.zig").generateEntityType(ECS_Component_Types.len, &ECS_Component_Types);
+    const Entity_Type = comptime @import("ecs.zig").generateEntityType(&ECS_Component_Types);
     //var t_entity: Entity_Type = .{};
     //t_entity.components_set.set(0);
 
@@ -62,11 +63,11 @@ pub fn main() !void {
     };
     test_system.signature.set(0);
 
-    var ecs: ECS_Type = try ECS_Type.init(std.heap.page_allocator, .{
+    var ecs0: ECS_Type = try ECS_Type.init(std.heap.page_allocator, .{
         .on = &[_]*SystemType {&test_system},
     });
     var t_u32_component: u32 = 3;
-    try ecs.components.component_u32.put(0, &t_u32_component);
+    try ecs0.components.component_u32.put(0, &t_u32_component);
     
     //const e0 = ecs.addEntity();
     //std.debug.print("Created new Entity with ID {d}\n", .{e0});
@@ -76,18 +77,18 @@ pub fn main() !void {
     //_ = ecs.removeEntity(e0);
     //std.debug.print("Removed Entity with ID {d}\n", .{e0});
 
-    const e2 = ecs.addEntity();
+    const e2 = ecs0.addEntity();
     //std.debug.print("Created new Entity with ID {d}\n", .{e2});
-    const e3 = ecs.addEntity();
+    const e3 = ecs0.addEntity();
     std.debug.print("Created new Entity with ID {d}\n", .{e3});
 
     const c0: u32 = 32;
     const c1: u32 = 33;
-    ecs.addComponent(e2, &c1);
-    ecs.addComponent(e3, &c0);
+    ecs0.addComponent(e2, &c1);
+    ecs0.addComponent(e3, &c0);
     //ecs.addComponent(e3, &c1);
     //ecs.removeComponent(&c0);
-    _ = ecs.removeEntity(e2);
+    _ = ecs0.removeEntity(e2);
 
     // Start main loop
     var running = true;
@@ -101,7 +102,7 @@ pub fn main() !void {
             }
         }
 
-        ecs.update();
+        ecs0.update();
 
         _ = c.SDL_SetRenderDrawColor(renderer, 30, 30, 60, 255);
         _ = c.SDL_RenderClear(renderer);
@@ -109,4 +110,6 @@ pub fn main() !void {
 
         c.SDL_Delay(16);
     }
+
+    ecs0.deinit();
 }

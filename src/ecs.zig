@@ -35,7 +35,8 @@ fn initEntityComponentHolder(comptime Components: []const type) generateEntityCo
 }
 
 // Generates an entity type needed for GenerateECSType
-pub fn generateEntityType(comptime count: usize, comptime Components: []const type) type {
+pub fn generateEntityType(comptime Components: []const type) type {
+    const count = Components.len;
     const ComponentHolder: type = generateEntityComponentHolder(Components);
 
     return struct {
@@ -44,7 +45,7 @@ pub fn generateEntityType(comptime count: usize, comptime Components: []const ty
    
         const Self = @This();
 
-        pub fn init() generateEntityType(count, Components) {
+        pub fn init() generateEntityType(Components) {
             return .{
                 .components_set = std.bit_set.StaticBitSet(count).initEmpty(),
                 .linked_components = initEntityComponentHolder(Components),
@@ -192,10 +193,6 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
                     .next = 0,
                     .free = std.ArrayList(u32).init(allocator),
                 },
-                //.component_id_manager = .{
-                //    .next = 0,
-                //    .free = std.ArrayList(u32).init(allocator),
-                //},
                 .entities = std.AutoHashMap(u32, *Entity_Type).init(allocator),
                 .components = initComponentStruct(Component_Struct_Type, Components, allocator),
                 
@@ -205,6 +202,20 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
                 .systems = systems_configs.on,
                 .systems_post = systems_configs.post,
             };
+        }
+
+        pub fn deinit(self: *Self) void {
+            var entityIt = self.entities.iterator();
+            while (entityIt.next()) |entity| {
+                _ = self.removeEntity(entity.key_ptr.*);
+            }
+
+            self.component_index_map.deinit();
+
+            inline for (Components) |T| {
+                @field(self.components, "component_" ++ @typeName(T)).deinit();
+                @field(self.components, "rev_component_" ++ @typeName(T)).deinit();
+            }
         }
         
         const EntityUpdateType = enum {
