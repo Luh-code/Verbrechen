@@ -50,7 +50,7 @@ pub fn generateEntityType(comptime Components: []const type) type {
                 .components_set = std.bit_set.StaticBitSet(count).initEmpty(),
                 .linked_components = initEntityComponentHolder(Components),
             };
-        } 
+        }
 
         pub fn addComponent(self: *Self, index: u32, component: anytype) void {
             self.components_set.set(index);
@@ -292,32 +292,23 @@ pub fn GenerateECSType(comptime Entity_Type: type, comptime Component_Struct_Typ
         // Does NOT .deinit entites! Call getLinkedEntities before to deinit manually
         pub fn removeEntity(self: *Self, entity: u32) bool {
             var e = self.entities.get(entity) orelse std.debug.panic("Failed to find entity with ID {d}\n", .{entity});
-            //var index_it = self.component_index_map.iterator();
+            
+            self.entityUpdate(entity, EntityUpdateType.REMOVED);
             
             inline for (0..Components.len, Components) |i, T| {
                 const s = e.checkSet(i);
                 if (s) {
-                    //const component = @field(e.getLinkedComponents(), @typeName(T));
-                    //self.removeComponent(component);
                     e.removeLinkedComponent(T);
                 }
 
-                //if (s) {
-                //    var comp_map = @field(self.components, self.component_index_map.get(p.key_ptr));
-                //    const comp = comp_map.get(entity) catch |err| {
-                //        std.debug.panic("Failed to find component in \"{s}\" for entity {d}: {}\n", .{p.key_ptr, entity, err});
-                //    };
-                //    comp_map.remove(entity);
-                //    var rev_comp_map = @field(self.components, "rev_"++p.key_ptr);
-                //    rev_comp_map.remove(comp);
-                //}
             }
             
-            self.entityUpdate(entity, EntityUpdateType.REMOVED);
+            
             const rem = self.entities.remove(entity);
             if (rem) {
                 self.entity_id_manager.remove(entity);
             }
+            self.allocator.destroy(e);
 
             return rem;
         }
