@@ -2,6 +2,8 @@ const std = @import("std");
 pub const c = @import("c_include.zig").c;
 pub const ecs = @import("ecs.zig");
 
+pub const archetype = @import("ecs/archetype.zig");
+
 const gpu_utils = @import("gpu.zig");
 
 var window: ?*c.SDL_Window = null;

@@ -6,8 +6,10 @@ const sdl_install_dir = sdl_source_dir ++ "/bin";
 fn buildSDL(b: *std.Build) *std.Build.Step {
     const sdl_cmake_configure = b.addSystemCommand(&[_][]const u8{
         "cmake",
-        "-S", sdl_source_dir,
-        "-B", sdl_build_dir,
+        "-S",
+        sdl_source_dir,
+        "-B",
+        sdl_build_dir,
         "-DSDL_VIDEO=ON",
         "-DSDL_WAYLAND=ON",
         "-DSDL_STATIC=OFF",
@@ -19,6 +21,7 @@ fn buildSDL(b: *std.Build) *std.Build.Step {
         "-DSDL_VIDEO_DRIVER_X11=ON",
         "-DSDL_HIDAPI=ON",
         "-DSDL_HIDAPI_JOYSTICK=ON",
+        "-DSDL_WAYLAND_LIBDECOR=ON",
         "-DSDL_INSTALL=ON",
         "-DSDL_JACK=OFF",
         "-DSDL_JACK_SHARED=ON",
@@ -33,20 +36,18 @@ fn buildSDL(b: *std.Build) *std.Build.Step {
         "-DCMAKE_BUILD_TYPE=Debug",
     });
 
-    const sdl_cmake_build = b.addSystemCommand(&[_][]const u8{
-        "cmake",
-        "--build", sdl_build_dir,
-        "--config", "Debug"
-    }); 
+    const sdl_cmake_build = b.addSystemCommand(&[_][]const u8{ "cmake", "--build", sdl_build_dir, "--config", "Debug" });
     sdl_cmake_build.step.dependOn(&sdl_cmake_configure.step);
 
     const sdl_cmake_install = b.addSystemCommand(&[_][]const u8{
         "cmake",
-        "--install", sdl_build_dir,
-        "--config", "Debug",
+        "--install",
+        sdl_build_dir,
+        "--config",
+        "Debug",
     });
     sdl_cmake_install.step.dependOn(&sdl_cmake_build.step);
-    
+
     return &sdl_cmake_install.step;
 }
 
@@ -70,6 +71,7 @@ fn dependSDL(b: *std.Build, target: *std.Build.Step.Compile) void {
     target.linkSystemLibrary("gbm");
     target.linkSystemLibrary("drm");
     target.linkSystemLibrary("glvnd");
+    // target.linkSystemLibrary("libdecor");
     //target.linkSystemLibrary("decor");
     target.linkSystemLibrary("xdg-desktop-portal");
     target.addIncludePath(b.path(sdl_install_dir ++ "/include"));
@@ -117,10 +119,14 @@ pub fn build(b: *std.Build) !void {
     const run_step = b.step("run", "Run the app");
     run_step.dependOn(&run_cmd.step);
 
-    const exe_unit_tests = b.addTest(.{
-        .root_source_file = b.path("tests/test_ecs.zig")
+    const test_mod = b.createModule(.{
+        .root_source_file = b.path("src/test.zig"),
+        .target = target,
+        .optimize = optimize,
     });
-    exe_unit_tests.root_module.addImport("verbrechen", exe_mod);
+
+    const exe_unit_tests = b.addTest(.{ .root_source_file = b.path("tests/ecs/ecs.zig") });
+    exe_unit_tests.root_module.addImport("verbrechen", test_mod);
 
     const run_exe_unit_tests = b.addRunArtifact(exe_unit_tests);
 

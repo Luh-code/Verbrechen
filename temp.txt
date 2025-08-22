@@ -1,0 +1,278 @@
+-- dynamic libasound -> libasound.so.2
+-- Checking for module 'libpipewire-0.3>=0.3.44'
+--   Found libpipewire-0.3, version 1.4.6
+-- dynamic libpipewire-0.3 -> libpipewire-0.3.so.0
+-- Checking for module 'libpulse>=0.9.15'
+--   Found libpulse, version 17.0
+-- dynamic libpulse -> libpulse.so.0
+-- dynamic libX11 -> libX11.so.6
+-- dynamic libXext -> libXext.so.6
+-- dynamic libXcursor -> libXcursor.so.1
+-- dynamic libXi -> libXi.so.6
+-- dynamic libXfixes -> libXfixes.so.3
+-- dynamic libXrandr -> libXrandr.so.2
+-- dynamic libXrender -> libXrender.so.1
+-- dynamic libXss -> libXss.so.1
+-- dynamic libXtst -> libXtst.so.6
+-- Checking for module 'libdrm'
+--   Found libdrm, version 2.4.124
+-- Checking for module 'gbm'
+--   Found gbm, version 25.1.0
+-- dynamic libdrm -> libdrm.so.2
+-- dynamic libgbm -> libgbm.so.1
+-- Checking for modules 'wayland-client>=1.18;wayland-egl;wayland-cursor;egl;xkbcommon>=0.5.0'
+--   Found wayland-client, version 1.23.1
+--   Found wayland-egl, version 18.1.0
+--   Found wayland-cursor, version 1.23.1
+--   Found egl, version 1.5
+--   Found xkbcommon, version 1.10.0
+-- dynamic libudev -> libudev.so.1
+-- Checking for one of the modules 'liburing-ffi'
+-- 
+-- SDL3 was configured with the following options:
+-- 
+-- Platform: Linux-6.15.4-zen2
+-- 64-bit:   TRUE
+-- Compiler: /nix/store/0fsnicvfpf55nkza12cjnad0w84d6ba7-gcc-wrapper-14.2.1.20250322/bin/gcc
+-- Revision: SDL3-3.3.0-release-3.2.6-652-g71f479b4a
+-- Vendor:   
+-- 
+-- Subsystems:
+--   Audio:    ON
+--   Video:    ON
+--   GPU:      ON
+--   Render:   ON
+--   Camera:   ON
+--   Joystick: ON
+--   Haptic:   ON
+--   Hidapi:   ON
+--   Power:    ON
+--   Sensor:   ON
+--   Dialog:   ON
+-- 
+-- Options:
+--   SDL_ALSA                    (Wanted: ON): ON
+--   SDL_ALSA_SHARED             (Wanted: ON): ON
+--   SDL_ALTIVEC                 (Wanted: OFF): OFF
+--   SDL_ARMNEON                 (Wanted: OFF): OFF
+--   SDL_ASAN                    (Wanted: OFF): OFF
+--   SDL_ASSEMBLY                (Wanted: ON): ON
+--   SDL_ASSERTIONS              (Wanted: auto): auto
+--   SDL_AVX                     (Wanted: ON): ON
+--   SDL_AVX2                    (Wanted: ON): ON
+--   SDL_AVX512F                 (Wanted: ON): ON
+--   SDL_BACKGROUNDING_SIGNAL    (Wanted: OFF): OFF
+--   SDL_CCACHE                  (Wanted: OFF): OFF
+--   SDL_CLANG_TIDY              (Wanted: OFF): OFF
+--   SDL_CLOCK_GETTIME           (Wanted: ON): ON
+--   SDL_COCOA                   (Wanted: OFF): OFF
+--   SDL_DBUS                    (Wanted: ON): ON
+--   SDL_DEPS_SHARED             (Wanted: ON): OFF
+--   SDL_DIRECTX                 (Wanted: OFF): OFF
+--   SDL_DISKAUDIO               (Wanted: ON): ON
+--   SDL_DUMMYAUDIO              (Wanted: ON): ON
+--   SDL_DUMMYCAMERA             (Wanted: ON): ON
+--   SDL_DUMMYVIDEO              (Wanted: ON): ON
+--   SDL_EXAMPLES                (Wanted: OFF): OFF
+--   SDL_EXAMPLES_LINK_SHARED    (Wanted: ON): OFF
+--   SDL_FOREGROUNDING_SIGNAL    (Wanted: OFF): OFF
+--   SDL_GCC_ATOMICS             (Wanted: ON): ON
+--   SDL_GPU_DXVK                (Wanted: OFF): OFF
+--   SDL_HIDAPI                  (Wanted: ON): ON
+--   SDL_HIDAPI_JOYSTICK         (Wanted: ON): ON
+--   SDL_HIDAPI_LIBUSB           (Wanted: OFF): OFF
+--   SDL_HIDAPI_LIBUSB_SHARED    (Wanted: OFF): OFF
+--   SDL_IBUS                    (Wanted: ON): ON
+--   SDL_INSTALL                 (Wanted: ON): OFF
+--   SDL_INSTALL_TESTS           (Wanted: OFF): OFF
+--   SDL_JACK                    (Wanted: OFF): OFF
+--   SDL_JACK_SHARED             (Wanted: OFF): OFF
+--   SDL_KMSDRM                  (Wanted: ON): ON
+--   SDL_KMSDRM_SHARED           (Wanted: ON): ON
+--   SDL_LASX                    (Wanted: OFF): OFF
+--   SDL_LIBC                    (Wanted: ON): ON
+--   SDL_LIBICONV                (Wanted: OFF): OFF
+--   SDL_LIBUDEV                 (Wanted: ON): ON
+--   SDL_LIBURING                (Wanted: ON): OFF
+--   SDL_LSX                     (Wanted: OFF): OFF
+--   SDL_METAL                   (Wanted: OFF): OFF
+--   SDL_MMX                     (Wanted: ON): ON
+--   SDL_OFFSCREEN               (Wanted: ON): ON
+--   SDL_OPENGL                  (Wanted: ON): ON
+--   SDL_OPENGLES                (Wanted: ON): ON
+--   SDL_OPENVR                  (Wanted: OFF): OFF
+--   SDL_OSS                     (Wanted: OFF): OFF
+--   SDL_PIPEWIRE                (Wanted: ON): ON
+--   SDL_PIPEWIRE_SHARED         (Wanted: ON): ON
+--   SDL_PTHREADS                (Wanted: ON): ON
+--   SDL_PTHREADS_SEM            (Wanted: ON): ON
+--   SDL_PULSEAUDIO              (Wanted: ON): ON
+--   SDL_PULSEAUDIO_SHARED       (Wanted: ON): ON
+--   SDL_RENDER_D3D              (Wanted: OFF): OFF
+--   SDL_RENDER_D3D11            (Wanted: OFF): OFF
+--   SDL_RENDER_D3D12            (Wanted: OFF): OFF
+--   SDL_RENDER_GPU              (Wanted: ON): ON
+--   SDL_RENDER_METAL            (Wanted: ON): OFF
+--   SDL_RENDER_VULKAN           (Wanted: ON): ON
+--   SDL_ROCKCHIP                (Wanted: OFF): OFF
+--   SDL_RPATH                   (Wanted: ON): ON
+--   SDL_RPI                     (Wanted: OFF): OFF
+--   SDL_SNDIO                   (Wanted: OFF): OFF
+--   SDL_SNDIO_SHARED            (Wanted: OFF): OFF
+--   SDL_SSE                     (Wanted: ON): ON
+--   SDL_SSE2                    (Wanted: ON): ON
+--   SDL_SSE3                    (Wanted: ON): ON
+--   SDL_SSE4_1                  (Wanted: ON): ON
+--   SDL_SSE4_2                  (Wanted: ON): ON
+--   SDL_SYSTEM_ICONV            (Wanted: ON): ON
+--   SDL_TESTS                   (Wanted: OFF): OFF
+--   SDL_TESTS_LINK_SHARED       (Wanted: ON): OFF
+--   SDL_UNINSTALL               (Wanted: ON): OFF
+--   SDL_VIRTUAL_JOYSTICK        (Wanted: ON): ON
+--   SDL_VIVANTE                 (Wanted: OFF): OFF
+--   SDL_VULKAN                  (Wanted: ON): ON
+--   SDL_WASAPI                  (Wanted: OFF): OFF
+--   SDL_WAYLAND                 (Wanted: ON): OFF
+--   SDL_WAYLAND_LIBDECOR        (Wanted: OFF): OFF
+--   SDL_WAYLAND_LIBDECOR_SHARED (Wanted: OFF): OFF
+--   SDL_WAYLAND_SHARED          (Wanted: ON): OFF
+--   SDL_X11                     (Wanted: ON): ON
+--   SDL_X11_SHARED              (Wanted: ON): ON
+--   SDL_X11_XCURSOR             (Wanted: ON): ON
+--   SDL_X11_XDBE                (Wanted: ON): ON
+--   SDL_X11_XFIXES              (Wanted: ON): ON
+--   SDL_X11_XINPUT              (Wanted: ON): ON
+--   SDL_X11_XRANDR              (Wanted: ON): ON
+--   SDL_X11_XSCRNSAVER          (Wanted: ON): ON
+--   SDL_X11_XSHAPE              (Wanted: ON): ON
+--   SDL_X11_XSYNC               (Wanted: ON): ON
+--   SDL_X11_XTEST               (Wanted: ON): ON
+--   SDL_XINPUT                  (Wanted: OFF): OFF
+-- 
+--  Build Shared Library: ON
+--  Build Static Library: OFF
+-- 
+-- If something was not detected, although the libraries
+-- were installed, then make sure you have set the
+-- CMAKE_C_FLAGS and CMAKE_PREFIX_PATH CMake variables correctly.
+-- 
+-- Configuring done (0.8s)
+-- Generating done (0.1s)
+-- Build files have been written to: /para/Projects/verbrechen/deps/sdl/build
+[  0%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/e_atan2.c.o[0m
+[  1%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/e_exp.c.o[0m
+[  1%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/e_fmod.c.o[0m
+[  2%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/e_log.c.o[0m
+[  2%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/e_log10.c.o[0m
+[  2%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/e_pow.c.o[0m
+[  3%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/e_rem_pio2.c.o[0m
+[  3%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/e_sqrt.c.o[0m
+[  3%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/k_cos.c.o[0m
+[  4%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/k_rem_pio2.c.o[0m
+[  4%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/k_sin.c.o[0m
+[  4%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/k_tan.c.o[0m
+[  5%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_atan.c.o[0m
+[  5%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_copysign.c.o[0m
+[  6%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_cos.c.o[0m
+[  6%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_fabs.c.o[0m
+[  6%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_floor.c.o[0m
+[  7%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_isinf.c.o[0m
+[  7%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_isinff.c.o[0m
+[  7%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_isnan.c.o[0m
+[  8%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_isnanf.c.o[0m
+[  8%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_modf.c.o[0m
+[  8%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_scalbn.c.o[0m
+[  9%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_sin.c.o[0m
+[  9%] [32mBuilding C object CMakeFiles/SDL_uclibc.dir/src/libm/s_tan.c.o[0m
+[ 10%] [32m[1mLinking C static library libSDL_uclibc.a[0m
+[ 10%] Built target SDL_uclibc
+[ 10%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/cmake_pch.h.gch[0m
+[ 10%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/SDL.c.o[0m
+[ 11%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/SDL_assert.c.o[0m
+[ 11%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/SDL_error.c.o[0m
+[ 11%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/SDL_guid.c.o[0m
+[ 12%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/SDL_hashtable.c.o[0m
+[ 12%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/SDL_hints.c.o[0m
+[ 12%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/SDL_list.c.o[0m
+[ 13%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/SDL_log.c.o[0m
+[ 13%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/SDL_properties.c.o[0m
+[ 13%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/SDL_utils.c.o[0m
+[ 14%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/atomic/SDL_atomic.c.o[0m
+[ 14%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/atomic/SDL_spinlock.c.o[0m
+[ 15%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/audio/SDL_audio.c.o[0m
+[ 15%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/audio/SDL_audiocvt.c.o[0m
+[ 15%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/audio/SDL_audiodev.c.o[0m
+[ 16%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/audio/SDL_audioqueue.c.o[0m
+[ 16%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/audio/SDL_audioresample.c.o[0m
+[ 16%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/audio/SDL_audiotypecvt.c.o[0m
+[ 17%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/audio/SDL_mixer.c.o[0m
+[ 17%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/audio/SDL_wave.c.o[0m
+[ 17%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/camera/SDL_camera.c.o[0m
+[ 18%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/core/SDL_core_unsupported.c.o[0m
+[ 18%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/cpuinfo/SDL_cpuinfo.c.o[0m
+[ 19%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/dynapi/SDL_dynapi.c.o[0m
+[ 19%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_categories.c.o[0m
+[ 19%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_clipboardevents.c.o[0m
+[ 20%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_displayevents.c.o[0m
+[ 20%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_dropevents.c.o[0m
+[ 20%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_events.c.o[0m
+[ 21%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_eventwatch.c.o[0m
+[ 21%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_keyboard.c.o[0m
+[ 21%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_keymap.c.o[0m
+[ 22%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_keysym_to_keycode.c.o[0m
+[ 22%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_keysym_to_scancode.c.o[0m
+[ 22%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_mouse.c.o[0m
+[ 23%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_pen.c.o[0m
+[ 23%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_quit.c.o[0m
+[ 24%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_scancode_tables.c.o[0m
+[ 24%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_touch.c.o[0m
+[ 24%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/SDL_windowevents.c.o[0m
+[ 25%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/events/imKStoUCS.c.o[0m
+[ 25%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/filesystem/SDL_filesystem.c.o[0m
+[ 25%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/gpu/SDL_gpu.c.o[0m
+[ 26%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/haptic/SDL_haptic.c.o[0m
+[ 26%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/hidapi/SDL_hidapi.c.o[0m
+[ 26%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/io/SDL_asyncio.c.o[0m
+[ 27%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/io/SDL_iostream.c.o[0m
+[ 27%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/io/generic/SDL_asyncio_generic.c.o[0m
+[ 28%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/joystick/SDL_gamepad.c.o[0m
+[ 28%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/joystick/SDL_joystick.c.o[0m
+[ 28%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/joystick/SDL_steam_virtual_gamepad.c.o[0m
+[ 29%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/joystick/controller_type.c.o[0m
+[ 29%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/locale/SDL_locale.c.o[0m
+[ 29%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/main/SDL_main_callbacks.c.o[0m
+[ 30%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/main/SDL_runapp.c.o[0m
+[ 30%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/misc/SDL_url.c.o[0m
+[ 30%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/power/SDL_power.c.o[0m
+[ 31%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/SDL_d3dmath.c.o[0m
+[ 31%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/SDL_render.c.o[0m
+[ 32%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/SDL_render_unsupported.c.o[0m
+[ 32%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/SDL_yuv_sw.c.o[0m
+[ 32%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/direct3d/SDL_render_d3d.c.o[0m
+[ 33%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/direct3d/SDL_shaders_d3d.c.o[0m
+[ 33%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/direct3d11/SDL_render_d3d11.c.o[0m
+[ 33%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/direct3d11/SDL_shaders_d3d11.c.o[0m
+[ 34%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/direct3d12/SDL_render_d3d12.c.o[0m
+[ 34%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/direct3d12/SDL_shaders_d3d12.c.o[0m
+[ 34%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/gpu/SDL_pipeline_gpu.c.o[0m
+[ 35%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/gpu/SDL_render_gpu.c.o[0m
+[ 35%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/gpu/SDL_shaders_gpu.c.o[0m
+[ 35%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/ngage/SDL_render_ngage.c.o[0m
+[ 36%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/opengl/SDL_render_gl.c.o[0m
+[ 36%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/opengl/SDL_shaders_gl.c.o[0m
+[ 37%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/opengles2/SDL_render_gles2.c.o[0m
+[ 37%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/opengles2/SDL_shaders_gles2.c.o[0m
+[ 37%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/ps2/SDL_render_ps2.c.o[0m
+[ 38%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/psp/SDL_render_psp.c.o[0m
+[ 38%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/software/SDL_blendfillrect.c.o[0m
+[ 38%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/software/SDL_blendline.c.o[0m
+[ 39%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/software/SDL_blendpoint.c.o[0m
+[ 39%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/software/SDL_drawline.c.o[0m
+[ 39%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/software/SDL_drawpoint.c.o[0m
+[ 40%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/software/SDL_render_sw.c.o[0m
+[ 40%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/software/SDL_rotate.c.o[0m
+[ 41%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/software/SDL_triangle.c.o[0m
+[ 41%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/vitagxm/SDL_render_vita_gxm.c.o[0m
+[ 41%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/vitagxm/SDL_render_vita_gxm_memory.c.o[0m
+[ 42%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/vitagxm/SDL_render_vita_gxm_tools.c.o[0m
+[ 42%] [32mBuilding C object CMakeFiles/SDL3-shared.dir/src/render/vulkan/SDL_render_vulkan.c.o[0m
