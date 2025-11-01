@@ -30,7 +30,7 @@ pub fn Archetype(SignatureType: type, component_count: usize) type {
                     cell.* = null;
                 }
             }
-
+            ArchetypeManager(3).djfjsdfl();
             return new;
         }
 

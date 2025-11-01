@@ -1,0 +1,8 @@
+{
+  "workspace_symbols": true,
+  "index_all": true,
+  "enable_diagnostics": true,
+  "completion": true,
+  "enable_build_on_save": true,
+  "build_on_save_step": "check"
+}
